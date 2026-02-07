@@ -33,7 +33,7 @@ const PROJECTS = [
 
 const QivoraVisual = () => (
     <div className="relative w-full h-full bg-gradient-to-br from-charcoal to-black flex items-center justify-center overflow-hidden group">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "url('/grid.svg')" }} />
 
         {/* Floating Card 1 - Moves Up on Hover */}
         <motion.div

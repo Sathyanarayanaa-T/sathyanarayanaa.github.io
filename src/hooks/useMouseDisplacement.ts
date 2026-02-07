@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 
 export const useMouseDisplacement = (strength: number = 0.1) => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const requestRef = useRef<number>();
+    const requestRef = useRef<number | null>(null);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
