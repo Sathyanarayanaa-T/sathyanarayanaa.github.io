@@ -111,75 +111,76 @@ const ParallaxProject = ({ project, index }: { project: typeof PROJECTS[0], inde
         offset: ["start end", "end start"],
     });
 
-    const scale = useTransform(scrollYProgress, [0, 1], [1, 0.90]);
-    const y = useTransform(scrollYProgress, [0, 1], [0, 50]);
+    // Transforms for the inner sticky content
+    const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+    const opacity = useTransform(scrollYProgress, [0.7, 1], [1, 0]);
 
-    const VisualComponent = () => {
-        switch (project.id) {
-            case 'qivora': return <QivoraVisual />;
-            case 'she-power-chain': return <ShePowerChainVisual />; // Correct order
-            case 'deshran': return <DeshranVisual />;
-            default: return null;
-        }
+    let VisualComponent = null;
+    switch (project.id) {
+        case 'qivora': VisualComponent = QivoraVisual; break;
+        case 'she-power-chain': VisualComponent = ShePowerChainVisual; break;
+        case 'deshran': VisualComponent = DeshranVisual; break;
     }
 
     return (
-        <motion.div
-            ref={container}
-            style={{ scale }}
-            className="h-[80vh] w-full flex items-center justify-center sticky top-0 md:top-10 mb-20 origin-top"
-        >
-            <div className="relative w-full max-w-6xl h-[600px] flex flex-col md:flex-row bg-charcoal rounded-4xl overflow-hidden border border-white/5 shadow-2xl">
+        // The tall container that defines the scroll timeline for this project
+        <div ref={container} className="relative h-[150vh] w-full mb-20 pointer-events-none">
+            {/* The sticky content that stays in view while the container scrolls */}
+            <motion.div
+                style={{ scale, opacity }}
+                className="sticky top-0 h-screen w-full flex items-center justify-center pointer-events-auto"
+            >
+                <div className="relative w-full max-w-6xl h-[600px] flex flex-col md:flex-row bg-charcoal rounded-4xl overflow-hidden border border-white/5 shadow-2xl">
 
-                {/* Visual Half */}
-                <div className="w-full md:w-2/3 h-full relative overflow-hidden group">
-                    <div className="w-full h-full transition-transform duration-700 group-hover:scale-105">
-                        <VisualComponent />
-                    </div>
-                    {/* Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-charcoal/80 to-transparent pointer-events-none" />
-                </div>
-
-                {/* Text Half */}
-                <div className="w-full md:w-1/3 p-8 md:p-12 flex flex-col justify-between bg-charcoal/50 backdrop-blur-sm border-l border-white/5">
-                    <motion.div style={{ y }}>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                            {project.tags.map((tag) => (
-                                <span key={tag} className="px-3 py-1 rounded-full border border-white/10 text-xs font-manrope text-white/50">
-                                    {tag}
-                                </span>
-                            ))}
+                    {/* Visual Half */}
+                    <div className="w-full md:w-2/3 h-full relative overflow-hidden group">
+                        <div className="w-full h-full transition-transform duration-700 group-hover:scale-105">
+                            {VisualComponent && <VisualComponent />}
                         </div>
-                        <h2 className="font-syne font-bold text-4xl md:text-5xl text-offwhite mb-4">
-                            {project.title}
-                        </h2>
-                        <p className="font-manrope text-white/60 leading-relaxed text-sm md:text-base">
-                            {project.description}
-                        </p>
-                    </motion.div>
+                        {/* Overlay Gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/80 to-transparent pointer-events-none" />
+                    </div>
 
-                    <div className="mt-8 self-end md:self-start">
-                        <Magnetic>
-                            <a
-                                href={project.link}
-                                target="_blank"
-                                className="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-charcoal hover:scale-110 transition-all duration-300 group bg-charcoal"
-                            >
-                                <ArrowUpRight className="w-8 h-8 group-hover:rotate-45 transition-transform" />
-                            </a>
-                        </Magnetic>
+                    {/* Text Half */}
+                    <div className="w-full md:w-1/3 p-8 md:p-12 flex flex-col justify-between bg-charcoal/50 backdrop-blur-sm border-l border-white/5">
+                        <motion.div>
+                            <div className="flex flex-wrap gap-2 mb-6">
+                                {project.tags.map((tag) => (
+                                    <span key={tag} className="px-3 py-1 rounded-full border border-white/10 text-xs font-manrope text-white/50">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <h2 className="font-syne font-bold text-4xl md:text-5xl text-offwhite mb-4">
+                                {project.title}
+                            </h2>
+                            <p className="font-manrope text-white/60 leading-relaxed text-sm md:text-base">
+                                {project.description}
+                            </p>
+                        </motion.div>
+
+                        <div className="mt-8 self-end md:self-start">
+                            <Magnetic>
+                                <a
+                                    href={project.link}
+                                    target="_blank"
+                                    className="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-charcoal hover:scale-110 transition-all duration-300 group bg-charcoal"
+                                >
+                                    <ArrowUpRight className="w-8 h-8 group-hover:rotate-45 transition-transform" />
+                                </a>
+                            </Magnetic>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </motion.div>
+            </motion.div>
+        </div>
     );
 };
 
 export const WorkGallery = () => {
     return (
         <section className="relative px-4 py-16 bg-transparent" id="work">
-
-            <div className="flex flex-col gap-16">
+            <div className="flex flex-col">
                 {PROJECTS.map((project, index) => (
                     <ParallaxProject key={project.id} project={project} index={index} />
                 ))}

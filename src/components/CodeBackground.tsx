@@ -44,6 +44,17 @@ const CODE_LINES = [
     "  let result = compute().await?;",
     "  println!('{:?}', result);",
     "}",
+    "npm install @types/react",
+    "const slice = createSlice({ name: 'user', initialState })",
+    "while (true) { process.nextTick(loop); }",
+];
+
+const COLORS = [
+    "#00f3ff", // Neon Cyan
+    "#bd00ff", // Neon Purple
+    "#00ff94", // Neon Green
+    "#ff0055", // Neon Red/Pink
+    "#ffff00", // Neon Yellow
 ];
 
 export const CodeBackground = () => {
@@ -53,35 +64,52 @@ export const CodeBackground = () => {
         const container = containerRef.current;
         if (!container) return;
 
-        // Create multiple columns of scrolling code
-        const columns = 8;
-        const columnWidth = 100 / columns;
+        // Create multiple rows of scrolling code
+        const rows = 15;
+        const rowHeight = 100 / rows;
 
-        for (let i = 0; i < columns; i++) {
-            const column = document.createElement("div");
-            column.className = "code-column";
-            column.style.cssText = `
+        for (let i = 0; i < rows; i++) {
+            const row = document.createElement("div");
+            row.className = "code-row";
+
+            // Random parameters for variety
+            const direction = i % 2 === 0 ? 1 : -1; // Alternate direction
+            const duration = 60 + Math.random() * 60; // Much slower speed (60-120s)
+            const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+
+            row.style.cssText = `
         position: absolute;
-        left: ${i * columnWidth}%;
-        width: ${columnWidth}%;
-        top: 0;
+        top: ${i * rowHeight}%;
+        height: ${rowHeight}%;
+        left: 0;
+        right: 0;
         font-family: "JetBrains Mono", monospace;
-        font-size: 10px;
-        line-height: 1.4;
-        color: rgba(255, 255, 255, 0.03);
-        white-space: pre;
+        font-size: 14px;
+        line-height: ${window.innerHeight / rows}px; 
+        color: ${color};
+        white-space: nowrap;
         overflow: hidden;
         pointer-events: none;
-        animation: scrollCode ${20 + i * 5}s linear infinite;
-        animation-delay: ${-i * 3}s;
+        opacity: 0.15;
+        display: flex;
+        align-items: center;
       `;
 
-            // Shuffle and repeat lines
+            // Shuffle and repeat lines to ensure it covers width + scrolling
             const shuffled = [...CODE_LINES].sort(() => Math.random() - 0.5);
-            const repeated = [...shuffled, ...shuffled, ...shuffled];
-            column.textContent = repeated.join("\n");
+            // Repeat enough times to ensure smooth scrolling loop
+            const content = Array(10).fill(shuffled).flat().join("  //  ");
 
-            container.appendChild(column);
+            const span = document.createElement("span");
+            span.textContent = content;
+            span.style.cssText = `
+                display: inline-block;
+                padding-left: 100%;
+                animation: scrollCode${direction > 0 ? 'Right' : 'Left'} ${duration}s linear infinite;
+            `;
+
+            row.appendChild(span);
+            container.appendChild(row);
         }
 
         return () => {
@@ -94,19 +122,18 @@ export const CodeBackground = () => {
     return (
         <>
             <style jsx global>{`
-        @keyframes scrollCode {
-          0% {
-            transform: translateY(0%);
-          }
-          100% {
-            transform: translateY(-33.33%);
-          }
+        @keyframes scrollCodeLeft {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes scrollCodeRight {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
         }
       `}</style>
             <div
                 ref={containerRef}
-                className="fixed inset-0 z-0 overflow-hidden pointer-events-none"
-                style={{ height: "300vh" }}
+                className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-black/5"
             />
         </>
     );

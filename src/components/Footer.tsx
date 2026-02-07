@@ -6,7 +6,7 @@ import { ScrollingText } from "./ScrollingText";
 
 export const Footer = () => {
     return (
-        <footer className="min-h-[50vh] py-20 flex flex-col items-center justify-center bg-charcoal relative overflow-hidden">
+        <footer className="h-screen py-20 flex flex-col items-center justify-center bg-charcoal relative overflow-hidden">
             {/* Background Gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-neon-purple/10 to-transparent pointer-events-none" />
 
