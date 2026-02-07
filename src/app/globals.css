@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  --foreground-rgb: 237, 237, 237;
+  --background-start-rgb: 10, 10, 10;
+  --background-end-rgb: 10, 10, 10;
+}
+
+@theme inline {
+  --color-charcoal: #0a0a0a;
+  --color-offwhite: #ededed;
+  --font-syne: var(--font-syne);
+  --font-manrope: var(--font-manrope);
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar for Lenis compatibility (optional, usually hidden for custom feel) */
+::-webkit-scrollbar {
+  width: 0px;
+}
