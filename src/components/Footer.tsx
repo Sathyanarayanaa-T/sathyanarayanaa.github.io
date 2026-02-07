@@ -44,7 +44,7 @@ export const Footer = () => {
             </div>
 
             <div className="absolute bottom-10 text-white/20 font-manrope text-sm uppercase tracking-widest">
-                © 2024 Sathyanarayanaa T. // Arch Linux Made Me Do It
+                © 2026 Sathyanarayanaa T. // powered by Cachy OS and other oss projects
             </div>
         </footer>
     );
